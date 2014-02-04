@@ -6,6 +6,7 @@ use League\OAuth2\Server\Exception\ClientException;
 use Exception;
 use Response;
 use Input;
+use Punchtime\PunchtimeHelpers;
 
 class AuthorizationServerProxy
 {
@@ -154,6 +155,12 @@ class AuthorizationServerProxy
 
             // Tell the auth server to issue an access token
             $response = $this->authServer->issueAccessToken($input);
+
+            if($input['grant_type'] == 'password')
+            {
+                $user_id = PunchtimeHelpers::getUserId($input['username'], $input['password']);
+                $response['user_id'] = $user_id;
+            }
 
         } catch (ClientException $e) {
 
