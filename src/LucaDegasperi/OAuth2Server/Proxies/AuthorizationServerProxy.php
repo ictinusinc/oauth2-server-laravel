@@ -168,7 +168,10 @@ class AuthorizationServerProxy
 
         } catch (ClientException $e) {
 
-            throw new $custom_exception("ClientException");
+            if($custom_exception)
+            {
+                throw new $custom_exception($this->authServer->getExceptionType($e->getCode()));
+            }
 
             // Throw an exception because there was a problem with the client's request
             $response = array(
@@ -183,7 +186,10 @@ class AuthorizationServerProxy
 
         } catch (Exception $e) {
 
-            throw new $custom_exception("Exception");
+            if($custom_exception)
+            {
+                throw new $custom_exception('server_error');
+            }
             // Throw an error when a non-library specific exception has been thrown
             $response = array(
                 'error' =>  'undefined_error',
