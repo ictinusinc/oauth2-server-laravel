@@ -170,7 +170,7 @@ class AuthorizationServerProxy
 
             if($custom_exception)
             {
-                throw new $custom_exception($this->authServer->getExceptionType($e->getCode()));
+                throw new $custom_exception( $e->getMessage(), $e->getCode() );
             }
 
             // Throw an exception because there was a problem with the client's request
@@ -188,7 +188,7 @@ class AuthorizationServerProxy
 
             if($custom_exception)
             {
-                throw new $custom_exception('server_error');
+                throw new $custom_exception('server_error', 5);
             }
             // Throw an error when a non-library specific exception has been thrown
             $response = array(
