@@ -13,7 +13,7 @@ return array(
     | https://github.com/php-loep/oauth2-server/wiki/Which-OAuth-2.0-grant-should-I-use%3F
     |
     | Available grant types are:
-    | 
+    |
     | 'grant_types' => array(
     |
     |    'authorization_code' => array(
@@ -30,7 +30,7 @@ return array(
     |
     |        // the code to run in order to verify the user's identity
     |        'callback'         => function($username, $password){
-    |            
+    |
     |            return Auth::validate(array(
     |                'email'    => $username,
     |                'password' => $password,
@@ -53,7 +53,7 @@ return array(
     |        // whether or not to issue a new refresh token when a new access token is issued
     |        'rotate_refresh_tokens' => false,
     |    ),
-    |    
+    |
     | ),
     |
     */
@@ -70,7 +70,7 @@ return array(
             'class'            => 'League\OAuth2\Server\Grant\Password',
             'access_token_ttl' => 604800,
             'callback'         => function ($username, $password) {
-                
+
                 $credentials = array(
                     'email' => $username,
                     'password' => $password,
@@ -92,7 +92,7 @@ return array(
             'refresh_token_ttl'     => 604800,
             'rotate_refresh_tokens' => false,
         ),
-        
+
     ),
 
     /*
@@ -189,4 +189,27 @@ return array(
     |
     */
     'http_headers_only' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Include Owner Id
+    |--------------------------------------------------------------------------
+    |
+    | This will tell the proxy server to include the owner_id for the session
+    | in the response for the password grant.
+    | By default it is not included.
+    |
+    */
+    'include_owner_id' => true,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Exception Override
+    |--------------------------------------------------------------------------
+    |
+    | Whether or not to throw a custom exception when errors occur.
+    | By default it is false and returns plain json errors.
+    |
+    */
+    'custom_exception' => '\Punchtime\Exception\PunchtimeException',
 );

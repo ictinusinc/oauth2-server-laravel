@@ -6,7 +6,7 @@ use League\OAuth2\Server\Exception\ClientException;
 use Exception;
 use Response;
 use Input;
-use Punchtime\PunchtimeHelpers;
+use Config;
 
 class AuthorizationServerProxy
 {
@@ -42,7 +42,7 @@ class AuthorizationServerProxy
 
     /**
      * Create a new AuthorizationServerProxy
-     * 
+     *
      * @param Authorization $authServer the OAuth Authorization Server to use
      */
     public function __construct(Authorization $authServer)
@@ -52,7 +52,7 @@ class AuthorizationServerProxy
 
     /**
      * Pass the method call to the underlying Authorization Server
-     * 
+     *
      * @param  string $method the method being called
      * @param  array|null $args the arguments of the method being called
      * @return mixed the underlying method retuned value
@@ -89,7 +89,7 @@ class AuthorizationServerProxy
 
     /**
      * Make a redirect with an authorization code
-     * 
+     *
      * @param  string $code   the authorization code of the redirection
      * @param  array  $params the redirection parameters
      * @return Redirect       a Redirect object
@@ -104,7 +104,7 @@ class AuthorizationServerProxy
 
     /**
      * Make a redirect with an error
-     * 
+     *
      * @param  array  $params the redirection parameters
      * @return Redirect       a Redirect object
      */
@@ -119,7 +119,7 @@ class AuthorizationServerProxy
 
     /**
      * Check the authorization code request parameters
-     * 
+     *
      * @throws \OAuth2\Exception\ClientException
      * @return array Authorize request parameters
      */
@@ -143,11 +143,13 @@ class AuthorizationServerProxy
 
     /**
      * Perform the access token flow
-     * 
+     *
      * @return Response the appropriate response object
      */
     public function performAccessTokenFlow()
     {
+        $custom_exception = Config::get('lucadegasperi/oauth2-server-laravel::oauth2.custom_exception');
+
         try {
 
             // Get user input
@@ -156,13 +158,17 @@ class AuthorizationServerProxy
             // Tell the auth server to issue an access token
             $response = $this->authServer->issueAccessToken($input);
 
-            if($input['grant_type'] == 'password')
+            $include_owner_id = Config::get('lucadegasperi/oauth2-server-laravel::oauth2.include_owner_id');
+            if($input['grant_type'] == 'password' && $include_owner_id )
             {
-                $user_id = PunchtimeHelpers::getUserId($input['username'], $input['password']);
+                $callback = Config::get('lucadegasperi/oauth2-server-laravel::oauth2.grant_types.password.callback');
+                $user_id = call_user_func_array($callback, array($input['username'], $input['password']));
                 $response['user_id'] = $user_id;
             }
 
         } catch (ClientException $e) {
+
+            throw new $custom_exception("ClientException");
 
             // Throw an exception because there was a problem with the client's request
             $response = array(
@@ -177,6 +183,7 @@ class AuthorizationServerProxy
 
         } catch (Exception $e) {
 
+            throw new $custom_exception("Exception");
             // Throw an error when a non-library specific exception has been thrown
             $response = array(
                 'error' =>  'undefined_error',
