@@ -163,7 +163,7 @@ class AuthorizationServerProxy
             {
                 $callback = Config::get('lucadegasperi/oauth2-server-laravel::oauth2.grant_types.password.callback');
                 $user_id = call_user_func_array($callback, array($input['username'], $input['password']));
-                $response['user_id'] = $user_id;
+                $response['user_id'] = (int) $user_id;
             }
 
         } catch (ClientException $e) {
