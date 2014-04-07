@@ -211,5 +211,5 @@ return array(
     | By default it is false and returns plain json errors.
     |
     */
-    'custom_exception' => '\Punchtime\Exception\PunchtimeException',
+    'custom_exception' => null,
 );

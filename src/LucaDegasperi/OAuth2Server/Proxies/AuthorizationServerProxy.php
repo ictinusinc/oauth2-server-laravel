@@ -158,13 +158,20 @@ class AuthorizationServerProxy
             // Tell the auth server to issue an access token
             $response = $this->authServer->issueAccessToken($input);
 
-            $include_owner_id = Config::get('lucadegasperi/oauth2-server-laravel::oauth2.include_owner_id');
-            if($input['grant_type'] == 'password' && $include_owner_id )
-            {
-                $callback = Config::get('lucadegasperi/oauth2-server-laravel::oauth2.grant_types.password.callback');
-                $user_id = call_user_func_array($callback, array($input['username'], $input['password']));
-                $response['user_id'] = (int) $user_id;
-            }
+            // $include_owner_id = Config::get('lucadegasperi/oauth2-server-laravel::oauth2.include_owner_id');
+            // if($include_owner_id )
+            // {
+            //     // var_dump($response['access_token']);die();
+            //     // $temp = ['Authorization' => 'Bearer '.$response['access_token']];
+            //     $temp = new \League\OAuth2\Server\Util\Request([],[],[],[],[],['Authorization' => 'Bearer '.$response['access_token']]);
+            //     var_dump($temp);die();
+            //     // ResourceServer::setRequest();
+            //     // $temp = ResourceServer::getRequest()->header('Authorization');
+            //     // $temp = ResourceServer::getRequest();
+            //     // var_dump($temp);die();
+            //     ResourceServer::isValid(true);
+            //     $response['user_id'] = ResourceServer::getOwnerId();
+            // }
 
         } catch (ClientException $e) {
 
