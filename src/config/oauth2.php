@@ -197,10 +197,10 @@ return array(
     |
     | This will tell the proxy server to include the owner_id for the session
     | in the response for the password grant.
-    | By default it is not included.
+    | By default it is false.
     |
     */
-    'include_owner_id' => true,
+    'include_owner_id' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -208,8 +208,8 @@ return array(
     |--------------------------------------------------------------------------
     |
     | Whether or not to throw a custom exception when errors occur.
-    | By default it is false and returns plain json errors.
-    |
+    | By default it is null and returns plain json errors.
+    | ex: \Punchtime\Exception\PunchtimeException
     */
     'custom_exception' => null,
 );

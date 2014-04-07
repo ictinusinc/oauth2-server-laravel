@@ -88,11 +88,11 @@ class AuthorizationServerProxyTest extends TestCase {
     public function test_access_token_correctly_issued()
     {
         $mock = $this->getServer();
-        $mock->shouldReceive('issueAccessToken')->once()->andReturn(array('foo' => 'bar'));
+        $mock->shouldReceive('issueAccessToken')->once()->andReturn(array('access_token' => 'bar'));
 
         $response = $this->getProxy($mock)->performAccessTokenFlow();
 
-        $this->assertEquals('{"foo":"bar"}', $response->getContent());
+        $this->assertEquals('{"access_token":"bar"}', $response->getContent());
         $this->assertTrue($response instanceof Illuminate\Http\JsonResponse);
         $this->assertTrue($response->isOk());
     }
